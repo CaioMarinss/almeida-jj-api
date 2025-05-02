@@ -1,0 +1,65 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Spring Boot
+*.log
+*.pid
+
+# Arquivos sensíveis
+.env
+*.env
+docker-compose.yml
+bd.sql
+
+# VSCode
+.vscode/
+
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Angular/React
+/dist
+/.cache
+
+# Arquivos de teste
+/target/test-classes/
+/target/test-output/
+
+# Arquivos temporários e logs
+logs/
+*.log
+
+# JetBrains Rider/WebStorm
+.idea/
+*.iml
