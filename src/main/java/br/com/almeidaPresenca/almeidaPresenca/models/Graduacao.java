@@ -27,10 +27,5 @@ public class Graduacao {
     @Column(name = "faixa", length = 2)
     private String faixa;
 
-    /*
-    @OneToMany (mappedBy = "graduacao") //nome do atributo na classe aluno
 
-    @JsonIgnoreProperties("graduacao") // evita loop entre aluno → plano → aluno...
-    private List<Aluno> alunosPorGraduacao = new ArrayList<>();
-    */
 }

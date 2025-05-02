@@ -10,14 +10,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/administrador")
-// controller diz respeito a tudo que o usuário controla
+
 public class AdministradorController {
 
     @Autowired
-    private AdministradorService administradorService; // instancio um new administradorService já que vou precisar usar os métodos de lá
+    private AdministradorService administradorService;
 
     @GetMapping("/listar")
-    // url/administrador/listar
     public ResponseEntity<List<Administrador>> findAll() {
         List<Administrador> administradores = administradorService.findAll();
         return ResponseEntity.ok().body(administradores); // se der ok, ele lista os administradores no body do json
@@ -27,7 +26,7 @@ public class AdministradorController {
     @GetMapping("/{idAdministrador}")
     public ResponseEntity<Administrador> findById(@PathVariable Integer idAdministrador) {
         Administrador administrador = administradorService.findById(idAdministrador);
-        return ResponseEntity.ok(administrador); // sempre retorna um responseEntity
+        return ResponseEntity.ok(administrador);
     }
 
     // inserindo administrador

@@ -10,17 +10,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/aluno")
-//controler diz respeito a tudo que o usuario controla
 public class AlunoController {
 
     @Autowired
-    private AlunoService alunoService; // instancio um new alunoService ja que vou precisar usar os metodos de la
+    private AlunoService alunoService;
 
     @GetMapping("/listar")
     //  url/aluno/listar
-    public ResponseEntity <List<Aluno>> findAll(){ //O corpo da resposta (body) será do tipo List<Aluno>, ou seja, uma lista de objetos Aluno
+    public ResponseEntity <List<Aluno>> findAll(){
         List<Aluno> alunos = alunoService.findAll();
-        return ResponseEntity.ok().body(alunos);//se der ok, ele lista os produtos no body do json
+        return ResponseEntity.ok().body(alunos);
 
     }
 
@@ -28,7 +27,7 @@ public class AlunoController {
     @GetMapping("/{idAluno}")
     public ResponseEntity <Aluno>findById(@PathVariable Integer idAluno){
         Aluno aluno = alunoService.findById(idAluno);
-        return ResponseEntity.ok(aluno); //sempre retorna um responseEntity
+        return ResponseEntity.ok(aluno);
     }
 
     @PostMapping("/inserir")

@@ -10,11 +10,11 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//o lombok cria os getters e setters, alem dos construtores com todos parametros e nenhum
+
 
 public class Aluno {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Usando auto incremento
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idAluno")
     @Id
     private Integer idAluno;
@@ -30,8 +30,8 @@ public class Aluno {
     @Temporal(TemporalType.DATE)
     private Date dtPagamento;
 
-    @ManyToOne //muitos alunos para 1 plano
-    @JoinColumn(name = "idPlano") //na tabela "plano" qual o ID?
+    @ManyToOne
+    @JoinColumn(name = "idPlano")
     private Plano plano;
 
     @Column(name = "situacao", nullable = false)

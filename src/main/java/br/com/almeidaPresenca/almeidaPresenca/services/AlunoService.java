@@ -10,19 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class AlunoService {
 
-    //aqui vamos apenas colocar a logica do Aluno Repository (no caso extends do jpa repository)
-    // por isso então vamos criar um NEW alunoRepository
     @Autowired
     private AlunoRepository alunoRepository;
 
     //listar alunos
-
     public List<Aluno> findAll(){
         return alunoRepository.findAll();
     }
 
     //mostrar um aluno pelo id
-
     public Aluno findById(Integer idAluno){
         return alunoRepository.findById(idAluno).orElse(null);
     }
