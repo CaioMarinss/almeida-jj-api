@@ -10,7 +10,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // todos os endpoints
-                .allowedOrigins("https://almeidatucuruvi.vercel.app/") // permite o frontend
+                .allowedOrigins("http://localhost:4200") // permite o frontend
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

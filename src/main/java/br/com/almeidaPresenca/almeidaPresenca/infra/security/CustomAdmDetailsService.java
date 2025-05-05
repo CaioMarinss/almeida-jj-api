@@ -20,7 +20,7 @@ public class CustomAdmDetailsService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Administrador administrador =this.repository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        Administrador administrador =this.repository.findByEmailIgnoreCase(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
 
         return new org.springframework.security.core.userdetails.User(administrador.getEmail(), administrador.getSenha(), new ArrayList<>());
 

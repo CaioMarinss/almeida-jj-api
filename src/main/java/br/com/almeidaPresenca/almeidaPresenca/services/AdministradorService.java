@@ -1,8 +1,12 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
+import br.com.almeidaPresenca.almeidaPresenca.dto.ResetSenhaDTO;
+import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
 import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +15,11 @@ import java.util.List;
 public class AdministradorService {
 
     @Autowired
-    private AdministradorRepository administradorRepository;
+    private  AdministradorRepository administradorRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService tokenService;
 
     // listar todos os administradores
     public List<Administrador> findAll(){
@@ -42,6 +50,28 @@ public class AdministradorService {
 
         return administradorRepository.save(administradorAtual);
     }
+
+    public void resetPassword(ResetSenhaDTO body) {
+        String emailDoRequest = body.email();
+
+        Administrador autenticado = (Administrador) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        String emailAutenticado = autenticado.getEmail();
+
+        if (!emailDoRequest.equalsIgnoreCase(emailAutenticado)) {
+            throw new RuntimeException("Token inválido para este e-mail.");
+        }
+
+        Administrador adm = administradorRepository.findByEmailIgnoreCase(emailDoRequest)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        adm.setSenha(passwordEncoder.encode(body.novaSenha()));
+        administradorRepository.save(adm);
+    }
+
+
 
     // Deletar administrador
     public boolean deleteById(Integer idAdministrador){

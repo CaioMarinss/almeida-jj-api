@@ -28,24 +28,32 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("Authorization Header: " + request.getHeader("Authorization"));
 
         String path = request.getServletPath();
 
-        if (path.equals("/auth/login") || path.equals("/auth/register")) {
+        // Endpoints públicos
+        if (path.equals("/auth/login") ||
+                path.equals("/auth/register") ||
+                path.equals("/auth/enviar-email")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = recoverToken(request);
-        String login = tokenService.validateToken(token);
+        if (token != null) {
+            String login = tokenService.validateToken(token);
 
-        if (login != null) {
-            Administrador administrador = administradorRepository.findByEmail(login)
-                    .orElseThrow(() -> new RuntimeException("Admin Not Found"));
+            if (login != null) {
+                Administrador administrador = administradorRepository.findByEmailIgnoreCase(login)
+                        .orElse(null);
 
-            var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            var authentication = new UsernamePasswordAuthenticationToken(administrador, null, authorities);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (administrador != null) {
+                    var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    var authentication = new UsernamePasswordAuthenticationToken(administrador, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+            }
         }
 
         filterChain.doFilter(request, response);
@@ -53,9 +61,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recoverToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return null;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.replace("Bearer ", "");
         }
-        return authHeader.replace("Bearer ", "");
+        return null;
     }
 }
