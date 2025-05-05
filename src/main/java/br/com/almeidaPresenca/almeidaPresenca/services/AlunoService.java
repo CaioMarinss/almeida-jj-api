@@ -42,7 +42,7 @@ public class AlunoService {
     }
 
     //deletar aluno
-    public boolean deleteById(Integer idAluno){
+     public boolean deleteById(Integer idAluno){
         Aluno aluno = findById(idAluno);
         if (aluno == null){
             return false;
