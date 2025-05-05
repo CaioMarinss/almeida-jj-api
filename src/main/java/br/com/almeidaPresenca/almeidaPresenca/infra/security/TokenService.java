@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -46,8 +47,7 @@ public class TokenService {
         }
     }
 
-    public  String validateToken(String token){
-
+    public String validateToken(String token){
         try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -58,6 +58,18 @@ public class TokenService {
 
         } catch (JWTVerificationException e) {
             return null;
+        }
+    }
+
+    public String validateTokenAndGetEmail(String token) {
+        try {
+            return JWT.require(Algorithm.HMAC256(secret))
+                    .withIssuer("almeidaPresenca")
+                    .build()
+                    .verify(token)
+                    .getSubject();
+        } catch (JWTVerificationException e) {
+            throw new RuntimeException("Token invalido ou expirado.");
         }
     }
 
