@@ -25,7 +25,7 @@ public class RecuperarSenhaService {
 
         String token = tokenService.generateToken(administrador);
 
-        String resetLink = "http://localhost:4200/resetar?token=" + token + "&email=" + email;
+        String resetLink = "https://almeidatucuruvi.vercel.app/resetar?token=" + token + "&email=" + email;
 
 
         String subject = "Recuperação de Senha";
