@@ -20,6 +20,7 @@ public class CustomAdmDetailsService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         Administrador administrador = this.repository.findByEmailIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -33,5 +34,4 @@ public class CustomAdmDetailsService  implements UserDetailsService {
                 new ArrayList<>()
         );
     }
-
 }
