@@ -11,6 +11,7 @@ import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
 import br.com.almeidaPresenca.almeidaPresenca.services.AdministradorService;
 import br.com.almeidaPresenca.almeidaPresenca.services.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +33,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        Administrador administrador = this.repository.findByEmailIgnoreCase(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
+        Administrador administrador = this.repository
+                .findByEmailIgnoreCase(body.email())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (body.senha()== null) {
+        if (body.senha() == null) {
             throw new IllegalArgumentException("A senha não pode ser nula");
         }
 
         if (!administrador.isVerificado()) {
-            return ResponseEntity.status(403).body("E-mail não verificado. Verifique seu e-mail antes de fazer login.");
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("erro", "Conta ainda não verificada. Verifique seu e-mail."));
         }
 
         if (passwordEncoder.matches(body.senha(), administrador.getSenha())) {
@@ -47,9 +52,11 @@ public class AuthController {
             return ResponseEntity.ok(new ResponseDTO(administrador.getNome(), token));
         }
 
-
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("erro", "Senha incorreta"));
     }
+
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
