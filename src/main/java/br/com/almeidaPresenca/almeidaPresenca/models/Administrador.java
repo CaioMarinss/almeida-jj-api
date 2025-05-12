@@ -27,5 +27,7 @@ public class Administrador {
     @Column(name = "senha", length = 100, nullable = false)
     private String senha;
 
+    @Column(name = "verificado", nullable = false)
+    private boolean verificado = false;
 
 }

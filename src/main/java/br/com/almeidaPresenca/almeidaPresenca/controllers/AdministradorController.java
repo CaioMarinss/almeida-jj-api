@@ -1,6 +1,7 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResetSenhaDTO;
+import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
 import br.com.almeidaPresenca.almeidaPresenca.services.AdministradorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class AdministradorController {
 
     @Autowired
     private AdministradorService administradorService;
+    @Autowired
+    private TokenService tokenService;
 
     @GetMapping("/listar")
     public ResponseEntity<List<Administrador>> findAll() {
@@ -32,12 +35,6 @@ public class AdministradorController {
         return ResponseEntity.ok(administrador);
     }
 
-    // inserindo administrador
-    @PostMapping("/inserir")
-    public ResponseEntity<Administrador> insertNew(@RequestBody Administrador administrador) {
-        Administrador administradorInserido = administradorService.insertNewAdministrador(administrador);
-        return ResponseEntity.ok(administradorInserido);
-    }
 
     @PutMapping("/resetar")
     public ResponseEntity<?> resetPassword(@RequestBody ResetSenhaDTO body) {
@@ -46,6 +43,23 @@ public class AdministradorController {
             return ResponseEntity.ok(Map.of("mensagem", "Senha redefinida com sucesso"));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/verificar")
+    public ResponseEntity<String> verificarEmail(@RequestParam String token) {
+        try {
+            String email = tokenService.validateTokenAndGetEmail(token);
+
+            Administrador administrador = administradorService.findByEmailIgnoreCase(email)
+                    .orElseThrow(() -> new RuntimeException("Administrador não encontrado"));
+
+            administrador.setVerificado(true);
+            administradorService.save(administrador);
+            return ResponseEntity.ok("E-mail verificado com sucesso!");
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

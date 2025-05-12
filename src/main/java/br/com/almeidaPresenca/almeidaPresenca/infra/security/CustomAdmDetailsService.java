@@ -20,9 +20,18 @@ public class CustomAdmDetailsService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Administrador administrador =this.repository.findByEmailIgnoreCase(username).orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        Administrador administrador = this.repository.findByEmailIgnoreCase(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new org.springframework.security.core.userdetails.User(administrador.getEmail(), administrador.getSenha(), new ArrayList<>());
+        if (!administrador.isVerificado()) {
+            throw new RuntimeException("E-mail não verificado. Verifique seu e-mail antes de entrar.");
+        }
 
+        return new org.springframework.security.core.userdetails.User(
+                administrador.getEmail(),
+                administrador.getSenha(),
+                new ArrayList<>()
+        );
     }
+
 }

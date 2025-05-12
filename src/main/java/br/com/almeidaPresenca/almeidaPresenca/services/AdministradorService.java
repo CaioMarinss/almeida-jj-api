@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdministradorService {
@@ -20,6 +21,8 @@ public class AdministradorService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private EmailService emailService;
 
     // listar todos os administradores
     public List<Administrador> findAll(){
@@ -31,10 +34,20 @@ public class AdministradorService {
         return administradorRepository.findById(idAdministrador).orElse(null);
     }
 
-    // Cadastrar novo administrador
-    public Administrador insertNewAdministrador(Administrador administrador){
+    public Administrador save(Administrador administrador) {
         return administradorRepository.save(administrador);
     }
+
+
+    // Cadastrar novo administrador
+    public Administrador insertNewAdministrador(Administrador administrador) {
+        administrador.setVerificado(false); // obriga que verifique antes de usar
+        Administrador administradorSalvo = administradorRepository.save(administrador);
+
+        emailService.sendEmailVerification(administradorSalvo);
+        return administradorSalvo;
+    }
+
 
     // Alterar cadastro de administrador
     public Administrador update(Integer idAdministrador, Administrador administradorAlterado){
@@ -71,6 +84,10 @@ public class AdministradorService {
         administradorRepository.save(adm);
     }
 
+    //achar por email sem se preocupar com caps
+    public Optional<Administrador> findByEmailIgnoreCase(String email) {
+        return administradorRepository.findByEmailIgnoreCase(email);
+    }
 
 
     // Deletar administrador

@@ -32,15 +32,17 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // Endpoints públicos
         if (path.equals("/auth/login") ||
                 path.equals("/auth/register") ||
-                path.equals("/auth/enviar-email")) {
+                path.equals("/auth/enviar-email-recuperacao") ||
+                path.equals("/auth/enviar-email-verificacao")) {
             filterChain.doFilter(request, response);
             return;
         }
 
+
         String token = recoverToken(request);
+
         if (token != null) {
             String login = tokenService.validateToken(token);
 
