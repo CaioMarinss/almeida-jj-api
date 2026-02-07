@@ -1,6 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.infra.security;
 
-import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
+import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
 import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -47,12 +47,12 @@ public class SecurityFilter extends OncePerRequestFilter {
             String login = tokenService.validateToken(token);
 
             if (login != null) {
-                Administrador administrador = administradorRepository.findByEmailIgnoreCase(login)
+                AdministradorVO administradorVO = administradorRepository.findByEmailIgnoreCase(login)
                         .orElse(null);
 
-                if (administrador != null) {
+                if (administradorVO != null) {
                     var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                    var authentication = new UsernamePasswordAuthenticationToken(administrador, null, authorities);
+                    var authentication = new UsernamePasswordAuthenticationToken(administradorVO, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

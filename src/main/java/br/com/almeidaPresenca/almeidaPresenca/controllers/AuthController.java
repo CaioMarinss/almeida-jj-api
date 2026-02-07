@@ -4,8 +4,7 @@ import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
-import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
+import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
 
 import br.com.almeidaPresenca.almeidaPresenca.services.AdministradorService;
@@ -33,7 +32,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        Administrador administrador = this.repository
+        AdministradorVO administradorVO = this.repository
                 .findByEmailIgnoreCase(body.email())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -41,15 +40,15 @@ public class AuthController {
             throw new IllegalArgumentException("A senha não pode ser nula");
         }
 
-        if (!administrador.isVerificado()) {
+        if (!administradorVO.isVerificado()) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("erro", "Conta ainda não verificada. Verifique seu e-mail."));
         }
 
-        if (passwordEncoder.matches(body.senha(), administrador.getSenha())) {
-            String token = this.tokenService.generateToken(administrador);
-            return ResponseEntity.ok(new ResponseDTO(administrador.getNome(), token));
+        if (passwordEncoder.matches(body.senha(), administradorVO.getSenha())) {
+            String token = this.tokenService.generateToken(administradorVO);
+            return ResponseEntity.ok(new ResponseDTO(administradorVO.getNome(), token));
         }
 
         return ResponseEntity
@@ -60,10 +59,10 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
-        Optional<Administrador> administrador = this.repository.findByEmailIgnoreCase(body.email());
+        Optional<AdministradorVO> administrador = this.repository.findByEmailIgnoreCase(body.email());
 
         if (administrador.isEmpty()) {
-            Administrador newAdm = new Administrador();
+            AdministradorVO newAdm = new AdministradorVO();
 
             newAdm.setNome(body.nome());
             newAdm.setEmail(body.email());
@@ -82,7 +81,7 @@ public class AuthController {
     @PostMapping("/enviar-email-recuperacao")
     public ResponseEntity<?> forgotPassword(@RequestBody EmailDTO body) {
         String email = body.email();
-        Administrador administrador = this.repository
+        AdministradorVO administradorVO = this.repository
                 .findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -97,12 +96,12 @@ public class AuthController {
     @PostMapping("/enviar-email-verificacao")
     public ResponseEntity<?> verifyEmail(@RequestBody EmailDTO body) {
         String email = body.email();
-        Administrador administrador = this.repository
+        AdministradorVO administradorVO = this.repository
                 .findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         try {
-            emailService.sendEmailVerification(administrador);
+            emailService.sendEmailVerification(administradorVO);
             return ResponseEntity.ok(Map.of("mensagem", "Email de verificação enviado com sucesso!"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("erro", "Erro ao enviar o email"));

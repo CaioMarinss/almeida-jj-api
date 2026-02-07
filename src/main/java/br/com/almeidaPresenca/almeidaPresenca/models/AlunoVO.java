@@ -4,37 +4,37 @@ import lombok.*;
 
 import java.util.Date;
 
-@Entity(name = "alunos")
-@Table(name = "alunos")
+@Entity(name = "ALUNOS")
+@Table(name = "ALUNOS")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
 
-public class Aluno {
+public class AlunoVO {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idAluno")
+    @Column(name = "IDALUNO")
     @Id
     private Integer idAluno;
 
-    @Column(name = "nome",length = 45, nullable = false)
+    @Column(name = "NOME",length = 45, nullable = false)
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name = "idGraduacao")
-    private Graduacao graduacao;
+    @JoinColumn(name = "IDGRADUACAO")
+    private GraduacaoVO graduacaoVO;
 
-    @Column(name = "dtPagamento")
+    @Column(name = "DTPAGAMENTO")
     @Temporal(TemporalType.DATE)
     private Date dtPagamento;
 
     @ManyToOne
-    @JoinColumn(name = "idPlano")
-    private Plano plano;
+    @JoinColumn(name = "IDPLANO")
+    private PlanoVO planoVO;
 
-    @Column(name = "situacao", nullable = false)
+    @Column(name = "SITUACAO", nullable = false)
     private Boolean situacao;
 
 }

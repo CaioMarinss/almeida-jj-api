@@ -1,7 +1,7 @@
 # Fase de build
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY . .
+COPY ../.. .
 RUN mvn clean package -DskipTests
 
 # Fase de execução
