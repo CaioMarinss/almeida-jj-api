@@ -1,8 +1,9 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
+import br.com.almeidaPresenca.almeidaPresenca.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResetSenhaDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
+import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
 import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,49 +26,47 @@ public class  AdministradorService {
     private EmailService emailService;
 
     // listar todos os administradores
-    public List<Administrador> findAll(){
+    public List<AdministradorVO> findAll(){
         return administradorRepository.findAll();
     }
 
     // Buscar administrador por ID
-    public Administrador findById(Integer idAdministrador) {
+    public AdministradorVO findById(Integer idAdministrador) {
         return administradorRepository.findById(idAdministrador).orElse(null);
     }
 
-    public Administrador save(Administrador administrador) {
-        return administradorRepository.save(administrador);
+    public AdministradorVO save(AdministradorVO administradorVO) {
+        return administradorRepository.save(administradorVO);
     }
-
 
     // Cadastrar novo administrador
-    public Administrador insertNewAdministrador(Administrador administrador) {
-        administrador.setVerificado(false); // obriga que verifique antes de usar
-        Administrador administradorSalvo = administradorRepository.save(administrador);
+    public AdministradorVO insertNewAdministrador(AdministradorVO administradorVO) {
+        administradorVO.setSituacao(SituacaoAtivoInativo.INATIVO.getValue()); // obriga que verifique antes de usar
+        AdministradorVO administradorVOSalvo = administradorRepository.save(administradorVO);
 
-        emailService.sendEmailVerification(administradorSalvo);
-        return administradorSalvo;
+        emailService.sendEmailVerification(administradorVOSalvo);
+        return administradorVOSalvo;
     }
 
-
     // Alterar cadastro de administrador
-    public Administrador update(Integer idAdministrador, Administrador administradorAlterado){
-        Administrador administradorAtual = findById(idAdministrador);
+    public AdministradorVO update(Integer idAdministrador, AdministradorVO administradorVOAlterado){
+        AdministradorVO administradorVOAtual = findById(idAdministrador);
 
-        if (administradorAtual == null) {
+        if (administradorVOAtual == null) {
             return null;
         }
 
-        administradorAtual.setNome(administradorAlterado.getNome());
-        administradorAtual.setEmail(administradorAlterado.getEmail());
-        administradorAtual.setSenha(administradorAlterado.getSenha());
+        administradorVOAtual.setNome(administradorVOAlterado.getNome());
+        administradorVOAtual.setEmail(administradorVOAlterado.getEmail());
+        administradorVOAtual.setSenha(administradorVOAlterado.getSenha());
 
-        return administradorRepository.save(administradorAtual);
+        return administradorRepository.save(administradorVOAtual);
     }
 
     public void resetPassword(ResetSenhaDTO body) {
         String emailDoRequest = body.email();
 
-        Administrador autenticado = (Administrador) SecurityContextHolder.getContext()
+        AdministradorVO autenticado = (AdministradorVO) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
 
@@ -77,7 +76,7 @@ public class  AdministradorService {
             throw new RuntimeException("Token inválido para este e-mail.");
         }
 
-        Administrador adm = administradorRepository.findByEmailIgnoreCase(emailDoRequest)
+        AdministradorVO adm = administradorRepository.findByEmailIgnoreCase(emailDoRequest)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         adm.setSenha(passwordEncoder.encode(body.novaSenha()));
@@ -85,15 +84,14 @@ public class  AdministradorService {
     }
 
     //achar por email sem se preocupar com caps
-    public Optional<Administrador> findByEmailIgnoreCase(String email) {
+    public Optional<AdministradorVO> findByEmailIgnoreCase(String email) {
         return administradorRepository.findByEmailIgnoreCase(email);
     }
 
-
     // Deletar administrador
     public boolean deleteById(Integer idAdministrador){
-        Administrador administrador = findById(idAdministrador);
-        if (administrador == null){
+        AdministradorVO administradorVO = findById(idAdministrador);
+        if (administradorVO == null){
             return false;
         } else {
             administradorRepository.deleteById(idAdministrador);

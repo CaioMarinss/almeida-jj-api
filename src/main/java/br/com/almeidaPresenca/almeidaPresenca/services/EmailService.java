@@ -1,7 +1,7 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
+import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
 import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -36,10 +36,10 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String email) {
 
-        Administrador administrador = administradorRepository.findByEmailIgnoreCase(email)
+        AdministradorVO administradorVO = administradorRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> new RuntimeException("Administrador não encontrado"));
 
-        String token = tokenService.generateToken(administrador);
+        String token = tokenService.generateToken(administradorVO);
 
         String resetLink = link + "/resetar?token=" + token + "&email=" + email;
 
@@ -50,15 +50,15 @@ public class EmailService {
         enviarEmail(email, subject, message);
     }
 
-    public void sendEmailVerification(Administrador administrador) {
-        String email = administrador.getEmail();
-        String nome = administrador.getNome();
+    public void sendEmailVerification(AdministradorVO administradorVO) {
+        String email = administradorVO.getEmail();
+        String nome = administradorVO.getNome();
 
-        String token = tokenService.generateToken(administrador);
+        String token = tokenService.generateToken(administradorVO);
         String envLink = linkFront + "/verificar?token=" + token;
 
         String mensagem = "Clique no envLink para verificar seu e-mail:\n\n" + envLink;
 
-        enviarEmail(administrador.getEmail(), "Verificação de E-mail", mensagem);
+        enviarEmail(administradorVO.getEmail(), "Verificação de E-mail", mensagem);
     }
 }

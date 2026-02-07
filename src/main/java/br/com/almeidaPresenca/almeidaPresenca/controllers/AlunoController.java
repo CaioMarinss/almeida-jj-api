@@ -1,6 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
-import br.com.almeidaPresenca.almeidaPresenca.models.Aluno;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import br.com.almeidaPresenca.almeidaPresenca.services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,30 +17,30 @@ public class  AlunoController {
 
     @GetMapping("/listar")
     //  url/aluno/listar
-    public ResponseEntity <List<Aluno>> findAll(){
-        List<Aluno> alunos = alunoService.findAll();
-        return ResponseEntity.ok().body(alunos);
+    public ResponseEntity <List<AlunoVO>> findAll(){
+        List<AlunoVO> alunoVOS = alunoService.findAll();
+        return ResponseEntity.ok().body(alunoVOS);
 
     }
 
     //listar pelo ID
     @GetMapping("/{idAluno}")
-    public ResponseEntity <Aluno>findById(@PathVariable Integer idAluno){
-        Aluno aluno = alunoService.findById(idAluno);
-        return ResponseEntity.ok(aluno);
+    public ResponseEntity <AlunoVO>findById(@PathVariable Integer idAluno){
+        AlunoVO alunoVO = alunoService.findById(idAluno);
+        return ResponseEntity.ok(alunoVO);
     }
 
     @PostMapping("/inserir")
     //inserindo aluno
-    public ResponseEntity<Aluno> insertNew(@RequestBody Aluno aluno){
-        Aluno alunoInserido = alunoService.insertNewAluno(aluno);
-        return ResponseEntity.ok(alunoInserido);
+    public ResponseEntity<AlunoVO> insertNew(@RequestBody AlunoVO alunoVO){
+        AlunoVO alunoVOInserido = alunoService.insertNewAluno(alunoVO);
+        return ResponseEntity.ok(alunoVOInserido);
     }
 
     @PutMapping("/{idAluno}")
-    public ResponseEntity<Aluno> update(@PathVariable Integer idAluno, @RequestBody Aluno alunoAlterado) {
-        Aluno aluno = alunoService.update(idAluno, alunoAlterado);
-        return ResponseEntity.ok().body(aluno);
+    public ResponseEntity<AlunoVO> update(@PathVariable Integer idAluno, @RequestBody AlunoVO alunoVOAlterado) {
+        AlunoVO alunoVO = alunoService.update(idAluno, alunoVOAlterado);
+        return ResponseEntity.ok().body(alunoVO);
     }
 
     @DeleteMapping("/{idAluno}")

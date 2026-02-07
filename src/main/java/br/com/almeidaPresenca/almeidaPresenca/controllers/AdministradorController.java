@@ -1,8 +1,9 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
+import br.com.almeidaPresenca.almeidaPresenca.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResetSenhaDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.Administrador;
+import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
 import br.com.almeidaPresenca.almeidaPresenca.services.AdministradorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,16 +24,16 @@ public class AdministradorController {
     private TokenService tokenService;
 
     @GetMapping("/listar")
-    public ResponseEntity<List<Administrador>> findAll() {
-        List<Administrador> administradores = administradorService.findAll();
+    public ResponseEntity<List<AdministradorVO>> findAll() {
+        List<AdministradorVO> administradores = administradorService.findAll();
         return ResponseEntity.ok().body(administradores); // se der ok, ele lista os administradores no body do json
     }
 
     // listar pelo ID
     @GetMapping("/{idAdministrador}")
-    public ResponseEntity<Administrador> findById(@PathVariable Integer idAdministrador) {
-        Administrador administrador = administradorService.findById(idAdministrador);
-        return ResponseEntity.ok(administrador);
+    public ResponseEntity<AdministradorVO> findById(@PathVariable Integer idAdministrador) {
+        AdministradorVO administradorVO = administradorService.findById(idAdministrador);
+        return ResponseEntity.ok(administradorVO);
     }
 
 
@@ -51,11 +52,11 @@ public class AdministradorController {
         try {
             String email = tokenService.validateTokenAndGetEmail(token);
 
-            Administrador administrador = administradorService.findByEmailIgnoreCase(email)
+            AdministradorVO administradorVO = administradorService.findByEmailIgnoreCase(email)
                     .orElseThrow(() -> new RuntimeException("Administrador não encontrado"));
 
-            administrador.setVerificado(true);
-            administradorService.save(administrador);
+            administradorVO.setSituacao(SituacaoAtivoInativo.ATIVO.getValue());
+            administradorService.save(administradorVO);
             return ResponseEntity.ok("E-mail verificado com sucesso!");
 
         } catch (RuntimeException e) {
