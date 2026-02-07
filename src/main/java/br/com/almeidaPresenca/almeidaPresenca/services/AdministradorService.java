@@ -38,7 +38,6 @@ public class  AdministradorService {
         return administradorRepository.save(administrador);
     }
 
-
     // Cadastrar novo administrador
     public Administrador insertNewAdministrador(Administrador administrador) {
         administrador.setVerificado(false); // obriga que verifique antes de usar
@@ -47,7 +46,6 @@ public class  AdministradorService {
         emailService.sendEmailVerification(administradorSalvo);
         return administradorSalvo;
     }
-
 
     // Alterar cadastro de administrador
     public Administrador update(Integer idAdministrador, Administrador administradorAlterado){
@@ -88,7 +86,6 @@ public class  AdministradorService {
     public Optional<Administrador> findByEmailIgnoreCase(String email) {
         return administradorRepository.findByEmailIgnoreCase(email);
     }
-
 
     // Deletar administrador
     public boolean deleteById(Integer idAdministrador){
