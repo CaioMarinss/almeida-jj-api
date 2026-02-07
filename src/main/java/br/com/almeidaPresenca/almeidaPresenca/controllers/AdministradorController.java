@@ -1,5 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
+import br.com.almeidaPresenca.almeidaPresenca.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResetSenhaDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
@@ -54,7 +55,7 @@ public class AdministradorController {
             AdministradorVO administradorVO = administradorService.findByEmailIgnoreCase(email)
                     .orElseThrow(() -> new RuntimeException("Administrador não encontrado"));
 
-            administradorVO.setVerificado(true);
+            administradorVO.setSituacao(SituacaoAtivoInativo.ATIVO.getValue());
             administradorService.save(administradorVO);
             return ResponseEntity.ok("E-mail verificado com sucesso!");
 

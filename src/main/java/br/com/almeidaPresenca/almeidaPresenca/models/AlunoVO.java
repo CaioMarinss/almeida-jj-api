@@ -35,6 +35,6 @@ public class AlunoVO {
     private PlanoVO planoVO;
 
     @Column(name = "SITUACAO", nullable = false)
-    private Boolean situacao;
+    private String situacao;
 
 }

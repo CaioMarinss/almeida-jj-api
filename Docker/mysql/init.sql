@@ -17,7 +17,7 @@ CREATE TABLE ADMINISTRADORES (
                                  NOME VARCHAR(100) NOT NULL,
                                  EMAIL VARCHAR(80) NOT NULL,
                                  SENHA VARCHAR(100) NOT NULL,
-                                 VERIFICADO TINYINT(1) NOT NULL DEFAULT 0,
+                                 SITUACAO VARCHAR(1) NOT NULL DEFAULT 'I',
                                  PRIMARY KEY (IDADMINISTRADOR),
                                  UNIQUE KEY UK_ADMIN_EMAIL (EMAIL)
 );
@@ -33,7 +33,7 @@ CREATE TABLE ALUNOS (
                         IDALUNO INT NOT NULL AUTO_INCREMENT,
                         NOME VARCHAR(45) NOT NULL,
                         IDGRADUACAO INT DEFAULT NULL,
-                        SITUACAO TINYINT(1) NOT NULL DEFAULT 0,
+                        SITUACAO VARCHAR(1) NOT NULL DEFAULT 'I',
                         DTPAGAMENTO DATE DEFAULT NULL,
                         IDPLANO INT DEFAULT NULL,
                         PRIMARY KEY (IDALUNO),

@@ -1,5 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
+import br.com.almeidaPresenca.almeidaPresenca.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
@@ -40,7 +41,7 @@ public class AuthController {
             throw new IllegalArgumentException("A senha não pode ser nula");
         }
 
-        if (!administradorVO.isVerificado()) {
+        if (administradorVO.getSituacao().equals(SituacaoAtivoInativo.INATIVO.getValue())) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("erro", "Conta ainda não verificada. Verifique seu e-mail."));
@@ -67,7 +68,7 @@ public class AuthController {
             newAdm.setNome(body.nome());
             newAdm.setEmail(body.email());
             newAdm.setSenha(passwordEncoder.encode(body.senha()));
-            newAdm.setVerificado(false);  // Certificando-se de que ele não está verificado ainda
+            newAdm.setSituacao(SituacaoAtivoInativo.INATIVO.getValue());  // Certificando-se de que ele não está verificado ainda
 
             this.repository.save(newAdm);
 

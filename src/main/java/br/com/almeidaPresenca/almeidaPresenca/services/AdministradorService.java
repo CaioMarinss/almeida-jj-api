@@ -1,5 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
+import br.com.almeidaPresenca.almeidaPresenca.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResetSenhaDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
@@ -40,7 +41,7 @@ public class  AdministradorService {
 
     // Cadastrar novo administrador
     public AdministradorVO insertNewAdministrador(AdministradorVO administradorVO) {
-        administradorVO.setVerificado(false); // obriga que verifique antes de usar
+        administradorVO.setSituacao(SituacaoAtivoInativo.INATIVO.getValue()); // obriga que verifique antes de usar
         AdministradorVO administradorVOSalvo = administradorRepository.save(administradorVO);
 
         emailService.sendEmailVerification(administradorVOSalvo);
