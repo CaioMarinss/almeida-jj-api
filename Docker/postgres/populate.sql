@@ -26,15 +26,15 @@ INSERT INTO GRADUACOES (ID_GRADUACAO, FAIXA, DESCRICAO) VALUES
    ALUNOS
    ========================= */
 INSERT INTO ALUNOS (ID_ALUNO, NOME, CPF, EMAIL, ID_GRADUACAO, SITUACAO, IC_ADMINISTRADOR, DT_PAGAMENTO, ID_PLANO, DT_EXPIRACAO_PLANO) VALUES
-    (1, 'CAIO MARINS','12345678901', 'caio@gmail.com', 2, 'I','N','2025-04-18', 5, '2026-04-18'),
-    (2, 'RAUL','12345678902', 'raul@gmail.com',3, 'I','N', '2022-03-12', 5, '2023-03-12'),
-    (3, 'CAIERA','12345678903', 'caiera@gmail.com',4, 'I','N', '2022-05-12', 5, '2023-05-12'),
-    (4, 'LEO KRUCHEWSKY','12345678902', 'leo@gmail.com',3, 'I','N', '2022-03-12', 5, '2023-03-12'),
-    (5, 'DANIEL BELO','12345678903', 'daniel@gmail.com',4, 'I','N', '2022-05-12', 5, '2023-05-12'),
-    (6, 'DANILO','12345678904', 'danilo@gmail.com',1, 'I','N', '2024-06-27', 4, '2024-12-27'),
-    (7, 'ANDER','12345678905', 'ander@gmail.com',3, 'I','N', '2021-03-17', 5, '2022-03-17'),
-    (8, 'ELIAS','12345678906' ,'elias@gmail.com',2, 'I','N', '2022-05-10', 5, '2023-05-10'),
-    (9, 'GUI PRADO','12345678907', 'prado@gmail.com',5, 'I','N', '2021-02-04', 5, '2022-02-04');
+    (1, 'CAIO MARINS','12345678901', 'CAIO@GMAIL.COM', 2, 'I','N','2025-04-18', 5, '2026-04-18'),
+    (2, 'RAUL','12345678902', 'RAUL@GMAIL.COM',3, 'I','N', '2022-03-12', 5, '2023-03-12'),
+    (3, 'CAIERA','12345678903', 'CAIERA@GMAIL.COM',4, 'I','N', '2022-05-12', 5, '2023-05-12'),
+    (4, 'LEO KRUCHEWSKY','12345678902', 'LEO@GMAIL.COM',3, 'I','N', '2022-03-12', 5, '2023-03-12'),
+    (5, 'DANIEL BELO','12345678903', 'DANIEL@GMAIL.COM',4, 'I','N', '2022-05-12', 5, '2023-05-12'),
+    (6, 'DANILO','12345678904', 'DANILO@GMAIL.COM',1, 'I','N', '2024-06-27', 4, '2024-12-27'),
+    (7, 'ANDER','12345678905', 'ANDER@GMAIL.COM',3, 'I','N', '2021-03-17', 5, '2022-03-17'),
+    (8, 'ELIAS','12345678906' ,'ELIAS@GMAIL.COM',2, 'I','N', '2022-05-10', 5, '2023-05-10'),
+    (9, 'GUI PRADO','12345678907', 'PRADO@GMAIL.COM',5, 'I','N', '2021-02-04', 5, '2022-02-04');
 
 /* =========================
    AULAS
