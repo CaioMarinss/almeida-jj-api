@@ -3,7 +3,7 @@ set -e
 
 echo "================ Ambiente DEV - Almeida JJ ================"
 
-./Docker/mysql/create-mysql.sh
+./Docker/postgres/create-postgres.sh
 
 ./Docker/backend/create-backend.sh
 
