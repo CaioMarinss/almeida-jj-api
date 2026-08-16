@@ -25,16 +25,16 @@ INSERT INTO GRADUACOES (ID_GRADUACAO, FAIXA, DESCRICAO) VALUES
 /* =========================
    ALUNOS
    ========================= */
-INSERT INTO ALUNOS (ID_ALUNO, NOME, CPF, ID_GRADUACAO, SITUACAO, IC_ADMNISTRADOR, DTPAGAMENTO, ID_PLANO, DT_EXPIRACAO_PLANO) VALUES
-    (1, 'Caio Marins','12345678901', 2, 'I','N','2025-04-18', 5, '2026-04-18'),
-    (2, 'Raul','12345678902', 3, 'I','N', '2022-03-12', 5, '2023-03-12'),
-    (3, 'Caiera','12345678903', 4, 'I','N', '2022-05-12', 5, '2023-05-12'),
-    (4, 'Leo Kruchewsky','12345678902', 3, 'I','N', '2022-03-12', 5, '2023-03-12'),
-    (5, 'Dani Belo','12345678903', 4, 'I','N', '2022-05-12', 5, '2023-05-12'),
-    (6, 'Danilo','12345678904', 1, 'I','N', '2024-06-27', 4, '2024-12-27'),
-    (7, 'Ander','12345678905', 3, 'I','N', '2021-03-17', 5, '2022-03-17'),
-    (8, 'Elias','12345678906' ,2, 'I','N', '2022-05-10', 5, '2023-05-10'),
-    (9, 'Guilherme Prado','12345678907', 5, 'I','N', '2021-02-04', 5, '2022-02-04');
+INSERT INTO ALUNOS (ID_ALUNO, NOME, CPF, EMAIL, ID_GRADUACAO, SITUACAO, IC_ADMNISTRADOR, DT_PAGAMENTO, ID_PLANO, DT_EXPIRACAO_PLANO) VALUES
+    (1, 'Caio Marins','12345678901', 'caio@gmail.com', 2, 'I','N','2025-04-18', 5, '2026-04-18'),
+    (2, 'Raul','12345678902', 'raul@gmail.com',3, 'I','N', '2022-03-12', 5, '2023-03-12'),
+    (3, 'Caiera','12345678903', 'caiera@gmail.com',4, 'I','N', '2022-05-12', 5, '2023-05-12'),
+    (4, 'Leo Kruchewsky','12345678902', 'leo@gmail.com',3, 'I','N', '2022-03-12', 5, '2023-03-12'),
+    (5, 'Dani Belo','12345678903', 'dani@gmail.com',4, 'I','N', '2022-05-12', 5, '2023-05-12'),
+    (6, 'Danilo','12345678904', 'danilo@gmail.com',1, 'I','N', '2024-06-27', 4, '2024-12-27'),
+    (7, 'Ander','12345678905', 'ander@gmail.com',3, 'I','N', '2021-03-17', 5, '2022-03-17'),
+    (8, 'Elias','12345678906' ,'elias@gmail.com',2, 'I','N', '2022-05-10', 5, '2023-05-10'),
+    (9, 'Guilherme Prado','12345678907', 'prado@gmail.com',5, 'I','N', '2021-02-04', 5, '2022-02-04');
 
 /* =========================
    AULAS
