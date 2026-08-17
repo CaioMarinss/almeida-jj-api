@@ -2,8 +2,8 @@ package br.com.almeidaPresenca.almeidaPresenca.services;
 
 import java.util.List;
 
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
-import br.com.almeidaPresenca.almeidaPresenca.repository.AlunoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,45 +11,31 @@ import org.springframework.stereotype.Service;
 public class AlunoService {
 
     @Autowired
-    private AlunoRepository alunoRepository;
+    private AlunoDAO alunoDAO;
 
-    //listar alunos
-    public List<AlunoVO> findAll(){
-        return alunoRepository.findAll();
-    }
-
-    //mostrar um aluno pelo id
-    public AlunoVO findById(Integer idAluno){
-        return alunoRepository.findById(idAluno).orElse(null);
-    }
-
-    //Cadastrar novo aluno
-    public AlunoVO insertNewAluno(AlunoVO alunoVO){
-        return alunoRepository.save(alunoVO);
+    public AlunoVO insertNewAluno(AlunoVO alunoVO) {
+       return alunoDAO.insertAluno(alunoVO);
     }
 
     //alterar cadastro de aluno
     public AlunoVO update(Integer idAluno, AlunoVO alunoVOAlterado){
-        AlunoVO alunoVOAtual = findById(idAluno);
+       AlunoVO alunoVOAtual = alunoDAO.obterPorId(idAluno);
 
-        alunoVOAtual.setNome(alunoVOAlterado.getNome());
-        alunoVOAtual.setGraduacaoVO(alunoVOAlterado.getGraduacaoVO());
-        alunoVOAtual.setSituacao(alunoVOAlterado.getSituacao());
-        alunoVOAtual.setDtPagamento(alunoVOAlterado.getDtPagamento());
-        alunoVOAtual.setPlanoVO(alunoVOAlterado.getPlanoVO());
+       if (alunoVOAtual == null) {
+           return null;
+       }
 
-        return alunoRepository.save(alunoVOAtual);
-    }
+       alunoVOAtual.setNome(alunoVOAlterado.getNome());
+       alunoVOAtual.setCpf(alunoVOAlterado.getCpf());
+       alunoVOAtual.setEmail(alunoVOAlterado.getEmail());
+       alunoVOAtual.setSenha(alunoVOAlterado.getSenha());
+       alunoVOAtual.setIdGraduacao(alunoVOAlterado.getIdGraduacao());
+       alunoVOAtual.setSituacao(alunoVOAlterado.getSituacao());
+       alunoVOAtual.setIcAdministrador(alunoVOAlterado.getIcAdministrador());
+       alunoVOAtual.setDtPagamento(alunoVOAlterado.getDtPagamento());
+       alunoVOAtual.setIdPlano(alunoVOAlterado.getIdPlano());
+       alunoVOAtual.setDtExpiracaoPlano(alunoVOAlterado.getDtExpiracaoPlano());
 
-    //deletar aluno
-     public boolean deleteById(Integer idAluno){
-        AlunoVO alunoVO = findById(idAluno);
-        if (alunoVO == null){
-            return false;
-        }else{
-            alunoRepository.deleteById(idAluno);
-            return true;
-        }
-
+       return alunoDAO.updateAluno(idAluno, alunoVOAtual);
     }
 }

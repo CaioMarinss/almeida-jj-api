@@ -1,14 +1,12 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
-import br.com.almeidaPresenca.almeidaPresenca.SituacaoAtivoInativo;
+import br.com.almeidaPresenca.almeidaPresenca.enums.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
 
-import br.com.almeidaPresenca.almeidaPresenca.services.AdministradorService;
 import br.com.almeidaPresenca.almeidaPresenca.services.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

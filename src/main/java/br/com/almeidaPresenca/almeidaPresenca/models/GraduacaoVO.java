@@ -11,17 +11,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "GRADUACOES")
-@Table(name = "GRADUACOES")
+@Entity
+@Table(name = "GRADUACOES", schema = "ALMEIDAJJ",
+        uniqueConstraints = @UniqueConstraint(name = "UK_GRADUACOES_FAIXA", columnNames = "FAIXA"))
 public class GraduacaoVO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDGRADUACAO")
+    @Column(name = "ID_GRADUACAO")
     private Integer idGraduacao;
 
-    @Column(name = "FAIXA", length = 2)
+    @Column(name = "FAIXA", length = 2, nullable = false)
     private String faixa;
 
-
+    @Column(name = "DESCRICAO", length = 30, nullable = false)
+    private String descricao;
 }

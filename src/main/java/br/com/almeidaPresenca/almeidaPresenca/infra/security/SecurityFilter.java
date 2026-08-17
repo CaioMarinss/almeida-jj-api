@@ -1,7 +1,5 @@
 package br.com.almeidaPresenca.almeidaPresenca.infra.security;
 
-import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
-import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

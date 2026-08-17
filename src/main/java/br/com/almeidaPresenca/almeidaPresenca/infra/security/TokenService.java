@@ -1,6 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.infra.security;
 
-import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -24,14 +24,14 @@ public class TokenService {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.ofHours(-3));  // UTC-3 (Brasília)
     }
 
-    public String generateToken(AdministradorVO administradorVO) {
+    public String generateToken(AlunoVO alunoVO) {
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             String token = JWT.create()
                     .withIssuer("almeidaPresenca")
-                    .withSubject(administradorVO.getEmail())
+                    .withSubject(alunoVO.getEmail())
                     .withIssuedAt(new Date())
                     .withExpiresAt(this.expirationDate())
 

@@ -1,5 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import br.com.almeidaPresenca.almeidaPresenca.services.AlunoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,15 @@ import java.util.List;
 public class  AlunoController {
 
     @Autowired
+    private AlunoDAO alunoDAO;
+
+    @Autowired
     private AlunoService alunoService;
 
     @GetMapping("/listar")
     //  url/aluno/listar
-    public ResponseEntity <List<AlunoVO>> findAll(){
-        List<AlunoVO> alunoVOS = alunoService.findAll();
+    public ResponseEntity <List<AlunoVO>> obterTodosAlunosAtivos(){
+        List<AlunoVO> alunoVOS = alunoDAO.obterTodosAlunosAtivos();
         return ResponseEntity.ok().body(alunoVOS);
 
     }
@@ -26,7 +30,7 @@ public class  AlunoController {
     //listar pelo ID
     @GetMapping("/{idAluno}")
     public ResponseEntity <AlunoVO>findById(@PathVariable Integer idAluno){
-        AlunoVO alunoVO = alunoService.findById(idAluno);
+        AlunoVO alunoVO = alunoDAO.obterPorId(idAluno);
         return ResponseEntity.ok(alunoVO);
     }
 
@@ -43,9 +47,9 @@ public class  AlunoController {
         return ResponseEntity.ok().body(alunoVO);
     }
 
-    @DeleteMapping("/{idAluno}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable Integer idAluno){
-        Boolean flag = alunoService.deleteById(idAluno);
-        return  ResponseEntity.ok().body(flag);
-    }
+//    @DeleteMapping("/{idAluno}")
+//    public ResponseEntity<Boolean> deleteById(@PathVariable Integer idAluno){
+//        Boolean flag = alunoService.deleteById(idAluno);
+//        return  ResponseEntity.ok().body(flag);
+//    }
 }

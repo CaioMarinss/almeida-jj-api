@@ -1,8 +1,8 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.AdministradorVO;
-import br.com.almeidaPresenca.almeidaPresenca.repository.AdministradorRepository;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,14 +15,13 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     @Autowired
-    private AdministradorRepository administradorRepository;
+    private AlunoDAO alunoDAO;
 
     @Autowired
     private TokenService tokenService;
 
     private String link = "https://almeida-jj-api.onrender.com/auth";
     private String linkFront = "https://almeidatucuruvi.vercel.app";
-
 
     public void enviarEmail(String para, String assunto, String corpo) {
         SimpleMailMessage mensagem = new SimpleMailMessage();
@@ -36,10 +35,10 @@ public class EmailService {
 
     public void sendPasswordResetEmail(String email) {
 
-        AdministradorVO administradorVO = administradorRepository.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new RuntimeException("Administrador não encontrado"));
+        AlunoVO alunoVO = alunoDAO.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
 
-        String token = tokenService.generateToken(administradorVO);
+        String token = tokenService.generateToken(alunoVO);
 
         String resetLink = link + "/resetar?token=" + token + "&email=" + email;
 

@@ -1,4 +1,4 @@
-package br.com.almeidaPresenca.almeidaPresenca;
+package br.com.almeidaPresenca.almeidaPresenca.enums;
 
 public enum SituacaoAtivoInativo {
     ATIVO("A", "Ativo"),
