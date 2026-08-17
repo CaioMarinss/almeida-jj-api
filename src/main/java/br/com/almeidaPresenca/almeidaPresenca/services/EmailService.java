@@ -1,12 +1,18 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
 import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.enums.Errors;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class EmailService {
@@ -34,14 +40,16 @@ public class EmailService {
     }
 
     public void sendPasswordResetEmail(String email) {
-
-        AlunoVO alunoVO = alunoDAO.findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+        AlunoVO alunoVO;
+        try{
+            alunoVO = alunoDAO.obterPorEmail(email);
+        } catch (Exception e){
+            throw new RuntimeException("Aluno não encontrado: " + e.getMessage());
+        }
 
         String token = tokenService.generateToken(alunoVO);
 
         String resetLink = link + "/resetar?token=" + token + "&email=" + email;
-
 
         String subject = "Recuperação de Senha";
         String message = "Clique no link abaixo para redefinir sua senha:\n" + resetLink;
@@ -49,15 +57,15 @@ public class EmailService {
         enviarEmail(email, subject, message);
     }
 
-    public void sendEmailVerification(AdministradorVO administradorVO) {
-        String email = administradorVO.getEmail();
-        String nome = administradorVO.getNome();
+    public void sendEmailVerification(AlunoVO alunoVO) {
+        String email = alunoVO.getEmail();
+        String nome = alunoVO.getNome();
 
-        String token = tokenService.generateToken(administradorVO);
+        String token = tokenService.generateToken(alunoVO);
         String envLink = linkFront + "/verificar?token=" + token;
 
         String mensagem = "Clique no envLink para verificar seu e-mail:\n\n" + envLink;
 
-        enviarEmail(administradorVO.getEmail(), "Verificação de E-mail", mensagem);
+        enviarEmail(alunoVO.getEmail(), "Verificação de E-mail", mensagem);
     }
 }

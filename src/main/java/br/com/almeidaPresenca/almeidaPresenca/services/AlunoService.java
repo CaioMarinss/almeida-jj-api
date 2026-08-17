@@ -1,7 +1,5 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
-import java.util.List;
-
 import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +11,12 @@ public class AlunoService {
     @Autowired
     private AlunoDAO alunoDAO;
 
-    public AlunoVO insertNewAluno(AlunoVO alunoVO) {
+    public AlunoVO insertAluno(AlunoVO alunoVO) {
        return alunoDAO.insertAluno(alunoVO);
     }
 
     //alterar cadastro de aluno
-    public AlunoVO update(Integer idAluno, AlunoVO alunoVOAlterado){
+    public AlunoVO updateAluno(Integer idAluno, AlunoVO alunoVOAlterado){
        AlunoVO alunoVOAtual = alunoDAO.obterPorId(idAluno);
 
        if (alunoVOAtual == null) {

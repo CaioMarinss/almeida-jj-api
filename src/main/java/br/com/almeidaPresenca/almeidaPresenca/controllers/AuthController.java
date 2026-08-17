@@ -1,5 +1,8 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.enums.Errors;
+import br.com.almeidaPresenca.almeidaPresenca.enums.MsgSucesso;
 import br.com.almeidaPresenca.almeidaPresenca.enums.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
@@ -7,6 +10,7 @@ import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
 
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import br.com.almeidaPresenca.almeidaPresenca.services.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -22,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AdministradorService repository;
+    private final AlunoDAO alunoDAO;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final EmailService emailService;
@@ -31,83 +36,95 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO body){
-        AdministradorVO administradorVO = this.repository
-                .findByEmailIgnoreCase(body.email())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if (body.senha() == null) {
-            throw new IllegalArgumentException("A senha não pode ser nula");
-        }
-
-        if (administradorVO.getSituacao().equals(SituacaoAtivoInativo.INATIVO.getValue())) {
+        AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
+        if (Objects.isNull(alunoVO)){
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("erro", "Conta ainda não verificada. Verifique seu e-mail."));
+                    .body(Map.of(Errors.ERR001.getValue(), Errors.ERR001.getDescricao()));
         }
 
-        if (passwordEncoder.matches(body.senha(), administradorVO.getSenha())) {
-            String token = this.tokenService.generateToken(administradorVO);
-            return ResponseEntity.ok(new ResponseDTO(administradorVO.getNome(), token));
+        if (body.senha() == null) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(Errors.ERR002.getValue(), Errors.ERR002.getDescricao()));
+        }
+
+        if (alunoVO.getSituacao().equals(SituacaoAtivoInativo.INATIVO.getValue())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(Errors.ERR003.getValue(), Errors.ERR003.getDescricao()));
+        }
+
+        if (passwordEncoder.matches(body.senha(), alunoVO.getSenha())) {
+            String token = this.tokenService.generateToken(alunoVO);
+            return ResponseEntity.ok(new ResponseDTO(alunoVO.getNome(), token));
         }
 
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("erro", "Senha incorreta"));
+                .body(Map.of(Errors.ERR004.getValue(), Errors.ERR004.getDescricao()));
     }
 
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
-        Optional<AdministradorVO> administrador = this.repository.findByEmailIgnoreCase(body.email());
 
-        if (administrador.isEmpty()) {
-            AdministradorVO newAdm = new AdministradorVO();
-
-            newAdm.setNome(body.nome());
-            newAdm.setEmail(body.email());
-            newAdm.setSenha(passwordEncoder.encode(body.senha()));
-            newAdm.setSituacao(SituacaoAtivoInativo.INATIVO.getValue());  // Certificando-se de que ele não está verificado ainda
-
-            this.repository.save(newAdm);
-
-            emailService.sendEmailVerification(newAdm);
-
-            return ResponseEntity.ok(Map.of("mensagem", "Cadastro realizado com sucesso! Verifique seu e-mail para ativação"));
+        AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
+        if (Objects.nonNull(alunoVO)){
+            return ResponseEntity.badRequest().body(Map.of(Errors.ERR005.getValue(), Errors.ERR005.getDescricao()));
         }
-        return ResponseEntity.badRequest().body(Map.of("erro", "E-mail já cadastrado"));
+
+        AlunoVO novoAluno = new AlunoVO();
+
+        novoAluno.setNome(body.nome());
+        novoAluno.setCpf(body.cpf());
+        novoAluno.setEmail(body.email());
+        novoAluno.setSenha(passwordEncoder.encode(body.senha()));
+        novoAluno.setIdGraduacao(body.idGraduacao()); // ta notnull no banco
+        novoAluno.setSituacao(SituacaoAtivoInativo.INATIVO.getValue());  // Certificando-se de que ele não está verificado ainda
+        novoAluno.setIdGraduacao(body.idplano()); // ta notnull no banco
+
+        alunoDAO.insertAluno(novoAluno);
+
+        emailService.sendEmailVerification(novoAluno);
+
+        return ResponseEntity.ok(Map.of(MsgSucesso.SUC001, MsgSucesso.SUC001.getDescricao()));
     }
 
     @PostMapping("/enviar-email-recuperacao")
     public ResponseEntity<?> forgotPassword(@RequestBody EmailDTO body) {
-        String email = body.email();
-        AdministradorVO administradorVO = this.repository
-                .findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
+        if (Objects.isNull(alunoVO)){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(Errors.ERR001.getValue(), Errors.ERR001.getDescricao()));
+        }
 
         try {
-            emailService.sendPasswordResetEmail(email);
-            return ResponseEntity.ok(Map.of("mensagem", "Email de recuperação enviado com sucesso!"));
+            emailService.sendPasswordResetEmail(body.email());
+            return ResponseEntity.ok(Map.of(MsgSucesso.SUC002, MsgSucesso.SUC002.getDescricao()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("erro", "Erro ao enviar o email"));
+            return ResponseEntity.badRequest().body(Map.of(Errors.ERR006.getValue(), Errors.ERR006.getDescricao()));
         }
     }
 
     @PostMapping("/enviar-email-verificacao")
     public ResponseEntity<?> verifyEmail(@RequestBody EmailDTO body) {
-        String email = body.email();
-        AdministradorVO administradorVO = this.repository
-                .findByEmailIgnoreCase(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
+        if (Objects.isNull(alunoVO)){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(Errors.ERR001.getValue(), Errors.ERR001.getDescricao()));
+        }
 
         try {
-            emailService.sendEmailVerification(administradorVO);
-            return ResponseEntity.ok(Map.of("mensagem", "Email de verificação enviado com sucesso!"));
+            emailService.sendEmailVerification(alunoVO);
+            return ResponseEntity.ok(Map.of(MsgSucesso.SUC003, MsgSucesso.SUC003.getDescricao()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("erro", "Erro ao enviar o email"));
+            return ResponseEntity.badRequest().body(Map.of(Errors.ERR006.getValue(), Errors.ERR006.getDescricao()));
         }
     }
-
-
-
 
 }

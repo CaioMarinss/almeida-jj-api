@@ -27,84 +27,29 @@ public class GraduacaoDAOImpl implements GraduacaoDAO {
     }
 
     @Override
-    public List<GraduacaoVO> findAll() {
-        logger.info("Executando: findAll");
+    public List<GraduacaoVO> obterTodasGraduacoes() {
+        logger.info("Executando: obterTodasGraduacoes");
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ID_GRADUACAO, FAIXA, DESCRICAO ");
-        sql.append("FROM ALMEIDAJJ.GRADUACOES ");
-        sql.append("ORDER BY ID_GRADUACAO");
+        sql.append("SELECT *                                    ");
+        sql.append("FROM GRADUACOES                             ");
+        sql.append("ORDER BY ID_GRADUACAO                       ");
+
         return namedJdbcTemplate.query(sql.toString(), new HashMap<>(), new GraduacaoRowMapper());
     }
 
     @Override
-    public Optional<GraduacaoVO> findById(Integer idGraduacao) {
+    public GraduacaoVO obterPorId(Integer idGraduacao) {
         logger.info("Executando: findById");
 
         Map<String, Object> params = new HashMap<>();
         params.put("ID_GRADUACAO", idGraduacao);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT ID_GRADUACAO, FAIXA, DESCRICAO ");
-        sql.append("FROM ALMEIDAJJ.GRADUACOES ");
-        sql.append("WHERE ID_GRADUACAO = :ID_GRADUACAO");
+        sql.append("SELECT *                                    ");
+        sql.append("FROM GRADUACOES                             ");
+        sql.append("WHERE ID_GRADUACAO = :ID_GRADUACAO          ");
 
-        List<GraduacaoVO> list = namedJdbcTemplate.query(sql.toString(), params, new GraduacaoRowMapper());
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-    }
-
-    @Override
-    public GraduacaoVO insert(GraduacaoVO graduacaoVO) {
-        logger.info("Executando: insert");
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        Map<String, Object> params = new HashMap<>();
-        params.put("FAIXA", graduacaoVO.getFaixa());
-        params.put("DESCRICAO", graduacaoVO.getDescricao());
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ALMEIDAJJ.GRADUACOES ");
-        sql.append("(FAIXA, DESCRICAO) ");
-        sql.append("VALUES (:FAIXA, :DESCRICAO)");
-
-        namedJdbcTemplate.update(sql.toString(), params, keyHolder, new String[]{"ID_GRADUACAO"});
-
-        Number generatedId = keyHolder.getKey();
-        if (generatedId != null) {
-            graduacaoVO.setIdGraduacao(generatedId.intValue());
-        }
-        return graduacaoVO;
-    }
-
-    @Override
-    public GraduacaoVO update(GraduacaoVO graduacaoVO) {
-        logger.info("Executando: update");
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("FAIXA", graduacaoVO.getFaixa());
-        params.put("DESCRICAO", graduacaoVO.getDescricao());
-        params.put("ID_GRADUACAO", graduacaoVO.getIdGraduacao());
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE ALMEIDAJJ.GRADUACOES ");
-        sql.append("SET FAIXA = :FAIXA, DESCRICAO = :DESCRICAO ");
-        sql.append("WHERE ID_GRADUACAO = :ID_GRADUACAO");
-
-        namedJdbcTemplate.update(sql.toString(), params);
-        return graduacaoVO;
-    }
-
-    @Override
-    public boolean deleteById(Integer idGraduacao) {
-        logger.info("Executando: deleteById");
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("ID_GRADUACAO", idGraduacao);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE FROM ALMEIDAJJ.GRADUACOES ");
-        sql.append("WHERE ID_GRADUACAO = :ID_GRADUACAO");
-
-        return namedJdbcTemplate.update(sql.toString(), params) > 0;
+        return namedJdbcTemplate.queryForObject(sql.toString(), params, new GraduacaoRowMapper());
     }
 }

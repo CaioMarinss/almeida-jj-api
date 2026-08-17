@@ -29,7 +29,7 @@ public class  AlunoController {
 
     //listar pelo ID
     @GetMapping("/{idAluno}")
-    public ResponseEntity <AlunoVO>findById(@PathVariable Integer idAluno){
+    public ResponseEntity <AlunoVO> obterPorId(@PathVariable Integer idAluno){
         AlunoVO alunoVO = alunoDAO.obterPorId(idAluno);
         return ResponseEntity.ok(alunoVO);
     }
@@ -37,19 +37,14 @@ public class  AlunoController {
     @PostMapping("/inserir")
     //inserindo aluno
     public ResponseEntity<AlunoVO> insertNew(@RequestBody AlunoVO alunoVO){
-        AlunoVO alunoVOInserido = alunoService.insertNewAluno(alunoVO);
+        AlunoVO alunoVOInserido = alunoService.insertAluno(alunoVO);
         return ResponseEntity.ok(alunoVOInserido);
     }
 
     @PutMapping("/{idAluno}")
     public ResponseEntity<AlunoVO> update(@PathVariable Integer idAluno, @RequestBody AlunoVO alunoVOAlterado) {
-        AlunoVO alunoVO = alunoService.update(idAluno, alunoVOAlterado);
+        AlunoVO alunoVO = alunoService.updateAluno(idAluno, alunoVOAlterado);
         return ResponseEntity.ok().body(alunoVO);
     }
 
-//    @DeleteMapping("/{idAluno}")
-//    public ResponseEntity<Boolean> deleteById(@PathVariable Integer idAluno){
-//        Boolean flag = alunoService.deleteById(idAluno);
-//        return  ResponseEntity.ok().body(flag);
-//    }
 }

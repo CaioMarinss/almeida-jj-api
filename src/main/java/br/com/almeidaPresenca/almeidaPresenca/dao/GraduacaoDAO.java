@@ -7,13 +7,8 @@ import java.util.Optional;
 
 public interface GraduacaoDAO {
 
-    List<GraduacaoVO> findAll();
+    List<GraduacaoVO> obterTodasGraduacoes();
 
-    Optional<GraduacaoVO> findById(Integer idGraduacao);
+    GraduacaoVO obterPorId(Integer idGraduacao);
 
-    GraduacaoVO insert(GraduacaoVO graduacaoVO);
-
-    GraduacaoVO update(GraduacaoVO graduacaoVO);
-
-    boolean deleteById(Integer idGraduacao);
 }

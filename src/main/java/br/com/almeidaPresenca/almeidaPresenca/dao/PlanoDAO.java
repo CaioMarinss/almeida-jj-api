@@ -7,13 +7,7 @@ import java.util.Optional;
 
 public interface PlanoDAO {
 
-    List<PlanoVO> findAll();
+    List<PlanoVO> obterTodosPlanos();
 
-    Optional<PlanoVO> findById(Integer idPlano);
-
-    PlanoVO insert(PlanoVO planoVO);
-
-    PlanoVO update(PlanoVO planoVO);
-
-    boolean deleteById(Integer idPlano);
+    PlanoVO obterPorId(Integer idPlano);
 }
