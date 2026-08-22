@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Component
 public class CustomAdmDetailsService  implements UserDetailsService {
@@ -20,10 +21,12 @@ public class CustomAdmDetailsService  implements UserDetailsService {
     private AlunoDAO alunoDAO;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
 
-        AlunoVO alunoVO = this.alunoDAO.findByEmailIgnoreCase(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        AlunoVO alunoVO = alunoDAO.obterPorEmail(userEmail);
+        if (Objects.isNull(alunoVO)){
+            throw new UsernameNotFoundException("User not found");
+        }
 
         if (alunoVO.getSituacao().equals(SituacaoAtivoInativo.INATIVO.getValue())) {
             throw new RuntimeException("E-mail não verificado. Verifique seu e-mail antes de entrar.");

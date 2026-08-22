@@ -30,8 +30,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/enviar-recuperacao", "/auth/enviar-email-verificacao").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/administrador/verificar").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/administrador/resetar").hasRole("ADMIN")
+//                        .requestMatchers(HttpMethod.GET, "/administrador/verificar").permitAll()
+//                        .requestMatchers(HttpMethod.PUT, "/administrador/resetar").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 

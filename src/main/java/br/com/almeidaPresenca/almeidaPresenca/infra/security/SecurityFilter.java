@@ -1,5 +1,7 @@
 package br.com.almeidaPresenca.almeidaPresenca.infra.security;
 
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +23,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     private TokenService tokenService;
 
     @Autowired
-    private AdministradorRepository administradorRepository;
+    private AlunoDAO alunoDAO;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -45,12 +47,11 @@ public class SecurityFilter extends OncePerRequestFilter {
             String login = tokenService.validateToken(token);
 
             if (login != null) {
-                AdministradorVO administradorVO = administradorRepository.findByEmailIgnoreCase(login)
-                        .orElse(null);
+                AlunoVO alunoVO = alunoDAO.obterPorEmail(login);
 
-                if (administradorVO != null) {
+                if (alunoVO != null) {
                     var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                    var authentication = new UsernamePasswordAuthenticationToken(administradorVO, null, authorities);
+                    var authentication = new UsernamePasswordAuthenticationToken(alunoVO, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }

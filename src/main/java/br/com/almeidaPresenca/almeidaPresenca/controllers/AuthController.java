@@ -81,9 +81,7 @@ public class AuthController {
         novoAluno.setCpf(body.cpf());
         novoAluno.setEmail(body.email());
         novoAluno.setSenha(passwordEncoder.encode(body.senha()));
-        novoAluno.setIdGraduacao(body.idGraduacao()); // ta notnull no banco
         novoAluno.setSituacao(SituacaoAtivoInativo.INATIVO.getValue());  // Certificando-se de que ele não está verificado ainda
-        novoAluno.setIdGraduacao(body.idplano()); // ta notnull no banco
 
         alunoDAO.insertAluno(novoAluno);
 
