@@ -1,20 +1,19 @@
 package br.com.almeidaPresenca.almeidaPresenca.dao.impl;
 
-import br.com.almeidaPresenca.almeidaPresenca.dao.GraduacaoDAO;
-import br.com.almeidaPresenca.almeidaPresenca.dao.rowmapper.GraduacaoRowMapper;
-import br.com.almeidaPresenca.almeidaPresenca.models.GraduacaoVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
-
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import br.com.almeidaPresenca.almeidaPresenca.dao.GraduacaoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.dao.rowmapper.GraduacaoRowMapper;
+import br.com.almeidaPresenca.almeidaPresenca.models.GraduacaoVO;
 
 @Repository
 public class GraduacaoDAOImpl implements GraduacaoDAO {

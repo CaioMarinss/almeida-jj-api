@@ -31,7 +31,7 @@ public class AlunoVO {
     @Column(name = "EMAIL", length = 80, nullable = false)
     private String email;
 
-    @Column(name = "SENHA", length = 255)
+    @Column(name = "SENHA")
     private String senha;
 
     @Column(name = "ID_GRADUACAO", nullable = false)

@@ -1,18 +1,13 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
-import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
-import br.com.almeidaPresenca.almeidaPresenca.enums.Errors;
-import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Objects;
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 
 @Service
 public class EmailService {
@@ -26,8 +21,8 @@ public class EmailService {
     @Autowired
     private TokenService tokenService;
 
-    private String link = "https://almeida-jj-api.onrender.com/auth";
-    private String linkFront = "https://almeidatucuruvi.vercel.app";
+    private final String link = "https://almeida-jj-api.onrender.com/auth";
+    private final String linkFront = "https://almeidatucuruvi.vercel.app";
 
     public void enviarEmail(String para, String assunto, String corpo) {
         SimpleMailMessage mensagem = new SimpleMailMessage();
@@ -58,9 +53,6 @@ public class EmailService {
     }
 
     public void sendEmailVerification(AlunoVO alunoVO) {
-        String email = alunoVO.getEmail();
-        String nome = alunoVO.getNome();
-
         String token = tokenService.generateToken(alunoVO);
         String envLink = linkFront + "/verificar?token=" + token;
 

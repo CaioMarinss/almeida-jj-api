@@ -1,26 +1,28 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
-import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
-import br.com.almeidaPresenca.almeidaPresenca.enums.Errors;
-import br.com.almeidaPresenca.almeidaPresenca.enums.MsgSucesso;
-import br.com.almeidaPresenca.almeidaPresenca.enums.SituacaoAtivoInativo;
-import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
-import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
-import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
-import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
+import java.util.Map;
+import java.util.Objects;
 
-import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
-import br.com.almeidaPresenca.almeidaPresenca.services.EmailService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
+import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
+import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
+import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
+import br.com.almeidaPresenca.almeidaPresenca.enums.Errors;
+import br.com.almeidaPresenca.almeidaPresenca.enums.MsgSucesso;
+import br.com.almeidaPresenca.almeidaPresenca.enums.SituacaoAtivoInativo;
+import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
+import br.com.almeidaPresenca.almeidaPresenca.services.EmailService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,7 +37,7 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO body){
+    public ResponseEntity<Object> login(@RequestBody LoginRequestDTO body){
 
         AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
         if (Objects.isNull(alunoVO)){
@@ -68,7 +70,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body) {
+    public ResponseEntity<Object> register(@RequestBody RegisterRequestDTO body) {
 
         AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
         if (Objects.nonNull(alunoVO)){
