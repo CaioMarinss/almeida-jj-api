@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -65,18 +66,18 @@ public class AlunoDAOImpl implements AlunoDAO {
 
     Map<String, Object> params = new HashMap<>();
     params.put("EMAIL", email);
-    params.put("SIT_ATIVO", SituacaoAtivoInativo.ATIVO.getValue());
 
     StringBuilder sql = new StringBuilder();
     sql.append("SELECT *                                    ");
     sql.append("FROM ALUNOS                                 ");
-    sql.append("WHERE SITUACAO = :SIT_ATIVO                 ");
-    sql.append("AND LOWER(EMAIL) = LOWER(:EMAIL)            ");
+    sql.append("WHERE LOWER(EMAIL) = LOWER(:EMAIL)          ");
 
-    System.out.println("Situacao: " + SituacaoAtivoInativo.ATIVO.getValue());
-    System.out.println("Email: " + email);
-
-    return namedJdbcTemplate.queryForObject(sql.toString(), params, new AlunoRowMapper());
+    try {
+      return namedJdbcTemplate.queryForObject(sql.toString(), params, new AlunoRowMapper());
+    } catch (EmptyResultDataAccessException e) {
+      logger.error("Erro ao obter aluno por email: " + e.getMessage());
+      return null;
+    }
   }
 
   @Override
@@ -104,7 +105,7 @@ public class AlunoDAOImpl implements AlunoDAO {
     sql.append(" :IC_ADMINISTRADOR, :DT_PAGAMENTO, :ID_PLANO, :DT_EXPIRACAO_PLANO)      ");
 
     namedJdbcTemplate.update(
-        sql.toString(), new MapSqlParameterSource(params), keyHolder, new String[] {"ID_ALUNO"});
+        sql.toString(), new MapSqlParameterSource(params), keyHolder, new String[] {"id_aluno"});
 
     Number generatedId = keyHolder.getKey();
     if (generatedId != null) {

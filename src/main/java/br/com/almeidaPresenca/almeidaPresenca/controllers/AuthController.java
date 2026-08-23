@@ -8,6 +8,7 @@ import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
 import br.com.almeidaPresenca.almeidaPresenca.enums.Errors;
 import br.com.almeidaPresenca.almeidaPresenca.enums.MsgSucesso;
 import br.com.almeidaPresenca.almeidaPresenca.enums.SituacaoAtivoInativo;
+import br.com.almeidaPresenca.almeidaPresenca.enums.TipoSimOuNao;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import br.com.almeidaPresenca.almeidaPresenca.services.EmailService;
@@ -78,6 +79,7 @@ public class AuthController {
     novoAluno.setSituacao(
         SituacaoAtivoInativo.INATIVO
             .getValue()); // Certificando-se de que ele não está verificado ainda
+    novoAluno.setIcAdministrador(TipoSimOuNao.NAO.getValue());
 
     alunoDAO.insertAluno(novoAluno);
 
