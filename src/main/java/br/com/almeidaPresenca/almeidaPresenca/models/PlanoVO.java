@@ -11,18 +11,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "PLANOS", schema = "ALMEIDAJJ",
-        uniqueConstraints = @UniqueConstraint(name = "UK_PLANOS_PERIODO", columnNames = "QTD_MESES"))
+@Table(
+    name = "PLANOS",
+    schema = "ALMEIDAJJ",
+    uniqueConstraints = @UniqueConstraint(name = "UK_PLANOS_PERIODO", columnNames = "QTD_MESES"))
 public class PlanoVO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_PLANO")
-    private Integer idPlano;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID_PLANO")
+  private Integer idPlano;
 
-    @Column(name = "PERIODO", length = 20)
-    private String periodo;
+  @Column(name = "PERIODO", length = 20)
+  private String periodo;
 
-    @Column(name = "QTD_MESES", nullable = false)
-    private Integer qtdMeses;
+  @Column(name = "QTD_MESES", nullable = false)
+  private Integer qtdMeses;
 }

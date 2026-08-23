@@ -1,63 +1,59 @@
 package br.com.almeidaPresenca.almeidaPresenca.services;
 
+import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
+import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
+import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
-import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
-import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
-
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+  @Autowired private JavaMailSender mailSender;
 
-    @Autowired
-    private AlunoDAO alunoDAO;
+  @Autowired private AlunoDAO alunoDAO;
 
-    @Autowired
-    private TokenService tokenService;
+  @Autowired private TokenService tokenService;
 
-    private final String link = "https://almeida-jj-api.onrender.com/auth";
-    private final String linkFront = "https://almeidatucuruvi.vercel.app";
+  private final String link = "https://almeida-jj-api.onrender.com/auth";
+  private final String linkFront = "https://almeidatucuruvi.vercel.app";
 
-    public void enviarEmail(String para, String assunto, String corpo) {
-        SimpleMailMessage mensagem = new SimpleMailMessage();
-        mensagem.setTo(para);
-        mensagem.setSubject(assunto);
-        mensagem.setText(corpo);
-        mensagem.setFrom("devmarins@gmail.com");
+  public void enviarEmail(String para, String assunto, String corpo) {
+    SimpleMailMessage mensagem = new SimpleMailMessage();
+    mensagem.setTo(para);
+    mensagem.setSubject(assunto);
+    mensagem.setText(corpo);
+    mensagem.setFrom("devmarins@gmail.com");
 
-        mailSender.send(mensagem);
+    mailSender.send(mensagem);
+  }
+
+  public void sendPasswordResetEmail(String email) {
+    AlunoVO alunoVO;
+    try {
+      alunoVO = alunoDAO.obterPorEmail(email);
+    } catch (Exception e) {
+      throw new RuntimeException("Aluno não encontrado: " + e.getMessage());
     }
 
-    public void sendPasswordResetEmail(String email) {
-        AlunoVO alunoVO;
-        try{
-            alunoVO = alunoDAO.obterPorEmail(email);
-        } catch (Exception e){
-            throw new RuntimeException("Aluno não encontrado: " + e.getMessage());
-        }
+    String token = tokenService.generateToken(alunoVO);
 
-        String token = tokenService.generateToken(alunoVO);
+    String resetLink = link + "/resetar?token=" + token + "&email=" + email;
 
-        String resetLink = link + "/resetar?token=" + token + "&email=" + email;
+    String subject = "Recuperação de Senha";
+    String message = "Clique no link abaixo para redefinir sua senha:\n" + resetLink;
 
-        String subject = "Recuperação de Senha";
-        String message = "Clique no link abaixo para redefinir sua senha:\n" + resetLink;
+    enviarEmail(email, subject, message);
+  }
 
-        enviarEmail(email, subject, message);
-    }
+  public void sendEmailVerification(AlunoVO alunoVO) {
+    String token = tokenService.generateToken(alunoVO);
+    String envLink = linkFront + "/verificar?token=" + token;
 
-    public void sendEmailVerification(AlunoVO alunoVO) {
-        String token = tokenService.generateToken(alunoVO);
-        String envLink = linkFront + "/verificar?token=" + token;
+    String mensagem = "Clique no envLink para verificar seu e-mail:\n\n" + envLink;
 
-        String mensagem = "Clique no envLink para verificar seu e-mail:\n\n" + envLink;
-
-        enviarEmail(alunoVO.getEmail(), "Verificação de E-mail", mensagem);
-    }
+    enviarEmail(alunoVO.getEmail(), "Verificação de E-mail", mensagem);
+  }
 }

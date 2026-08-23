@@ -18,35 +18,43 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private SecurityFilter securityFilter;
+  @Autowired private SecurityFilter securityFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> {}) // habilita CORS com config padrão
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/enviar-recuperacao", "/auth/enviar-email-verificacao").permitAll()
-//                        .requestMatchers(HttpMethod.GET, "/administrador/verificar").permitAll()
-//                        .requestMatchers(HttpMethod.PUT, "/administrador/resetar").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
+    http.csrf(csrf -> csrf.disable())
+        .cors(cors -> {}) // habilita CORS com config padrão
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        HttpMethod.POST,
+                        "/auth/login",
+                        "/auth/register",
+                        "/auth/enviar-recuperacao",
+                        "/auth/enviar-email-verificacao")
+                    .permitAll()
+                    //                        .requestMatchers(HttpMethod.GET,
+                    // "/administrador/verificar").permitAll()
+                    //                        .requestMatchers(HttpMethod.PUT,
+                    // "/administrador/resetar").hasRole("ADMIN")
+                    .anyRequest()
+                    .authenticated())
+        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
 
-        return http.build();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }

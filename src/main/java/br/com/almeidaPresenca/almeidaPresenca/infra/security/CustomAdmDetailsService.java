@@ -1,41 +1,34 @@
 package br.com.almeidaPresenca.almeidaPresenca.infra.security;
 
-
-
 import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
 import br.com.almeidaPresenca.almeidaPresenca.enums.SituacaoAtivoInativo;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
+import java.util.ArrayList;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
 @Component
-public class CustomAdmDetailsService  implements UserDetailsService {
+public class CustomAdmDetailsService implements UserDetailsService {
 
-    @Autowired
-    private AlunoDAO alunoDAO;
+  @Autowired private AlunoDAO alunoDAO;
 
-    @Override
-    public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+  @Override
+  public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
 
-        AlunoVO alunoVO = alunoDAO.obterPorEmail(userEmail);
-        if (Objects.isNull(alunoVO)){
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        if (alunoVO.getSituacao().equals(SituacaoAtivoInativo.INATIVO.getValue())) {
-            throw new RuntimeException("E-mail não verificado. Verifique seu e-mail antes de entrar.");
-        }
-
-        return new org.springframework.security.core.userdetails.User(
-                alunoVO.getEmail(),
-                alunoVO.getSenha(),
-                new ArrayList<>()
-        );
+    AlunoVO alunoVO = alunoDAO.obterPorEmail(userEmail);
+    if (Objects.isNull(alunoVO)) {
+      throw new UsernameNotFoundException("User not found");
     }
+
+    if (alunoVO.getSituacao().equals(SituacaoAtivoInativo.INATIVO.getValue())) {
+      throw new RuntimeException("E-mail não verificado. Verifique seu e-mail antes de entrar.");
+    }
+
+    return new org.springframework.security.core.userdetails.User(
+        alunoVO.getEmail(), alunoVO.getSenha(), new ArrayList<>());
+  }
 }

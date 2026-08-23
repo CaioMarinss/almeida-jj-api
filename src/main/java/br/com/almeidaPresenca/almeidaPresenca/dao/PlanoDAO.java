@@ -1,12 +1,11 @@
 package br.com.almeidaPresenca.almeidaPresenca.dao;
 
-import java.util.List;
-
 import br.com.almeidaPresenca.almeidaPresenca.models.PlanoVO;
+import java.util.List;
 
 public interface PlanoDAO {
 
-    List<PlanoVO> obterTodosPlanos();
+  List<PlanoVO> obterTodosPlanos();
 
-    PlanoVO obterPorId(Integer idPlano);
+  PlanoVO obterPorId(Integer idPlano);
 }
