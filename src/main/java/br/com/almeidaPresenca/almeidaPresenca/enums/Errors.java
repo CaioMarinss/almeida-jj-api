@@ -6,7 +6,8 @@ public enum Errors {
   ERR003("ERR003", "E-mail não verificado, verifique sua caixa de entrada."),
   ERR004("ERR004", "Login incorreto."),
   ERR005("ERR005", "E-mail já cadastrado."),
-  ERR006("ERR006", "Erro ao enviar o email.");
+  ERR006("ERR006", "Erro ao enviar o email."),
+  ERR007("ERR007", "Token inválido para este e-mail.");
 
   private final String value;
   private final String descricao;

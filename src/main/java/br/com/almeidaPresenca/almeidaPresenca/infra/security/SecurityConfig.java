@@ -36,10 +36,10 @@ public class SecurityConfig {
                         "/email/enviar-email-recuperacao",
                         "/email/enviar-email-verificacao")
                     .permitAll()
-                    //                        .requestMatchers(HttpMethod.GET,
-                    // "/administrador/verificar").permitAll()
-                    //                        .requestMatchers(HttpMethod.PUT,
-                    // "/administrador/resetar").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/aluno/verificar")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/aluno/resetar")
+                    .hasRole("ADMIN")
                     .anyRequest()
                     .authenticated())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);

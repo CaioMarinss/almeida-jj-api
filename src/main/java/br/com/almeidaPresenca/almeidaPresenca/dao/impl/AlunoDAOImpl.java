@@ -147,4 +147,36 @@ public class AlunoDAOImpl implements AlunoDAO {
     alunoNovoVO.setIdAluno(idAlunoAtual);
     return alunoNovoVO;
   }
+
+  @Override
+  public void atualizaSitAluno(Integer idAluno, SituacaoAtivoInativo situacaoAtivoInativo) {
+    logger.info("Executando: updateAluno");
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("ID_ALUNO", idAluno);
+    params.put("SITUACAO", situacaoAtivoInativo.getValue());
+
+    StringBuilder sql = new StringBuilder();
+    sql.append("UPDATE ALUNOS                 ");
+    sql.append("SET SITUACAO = :SITUACAO      ");
+    sql.append("WHERE ID_ALUNO = :ID_ALUNO    ");
+
+    namedJdbcTemplate.update(sql.toString(), params);
+  }
+
+  @Override
+  public void atualizaSenha(Integer idAluno, String novaSenha) {
+    logger.info("Executando: updateAluno");
+
+    Map<String, Object> params = new HashMap<>();
+    params.put("ID_ALUNO", idAluno);
+    params.put("SENHA", novaSenha);
+
+    StringBuilder sql = new StringBuilder();
+    sql.append("UPDATE ALUNOS                 ");
+    sql.append("SET SENHA = :SENHA            ");
+    sql.append("WHERE ID_ALUNO = :ID_ALUNO    ");
+
+    namedJdbcTemplate.update(sql.toString(), params);
+  }
 }
