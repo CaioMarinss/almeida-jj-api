@@ -14,13 +14,21 @@ if [ -z "$DATABASE_NAME" ]; then
 fi
 
 echo "================ Parando containers ================"
-docker compose down
+docker compose down || true
+
+# If a container with the same name exists outside of compose, remove it to avoid conflicts
+EXISTING_CONTAINER_NAME="postgres-almeidajj"
+if docker ps -a --format '{{.Names}}' | grep -q "^${EXISTING_CONTAINER_NAME}$"; then
+  echo "Found existing container ${EXISTING_CONTAINER_NAME}, removing it"
+  docker rm -f "${EXISTING_CONTAINER_NAME}" || true
+fi
 
 echo "================ Removendo volume do Postgres ================"
+# Try to remove compose-managed volume; ignore errors
 docker volume rm almeida-jj-api_db_data || true
 
 echo "================ Subindo Postgres ================"
-docker compose up -d postgres-almeidajj
+docker compose up -d postgres-almeidajj || true
 
 echo "================ Aguardando Postgres ficar pronto ================"
 # Use postgres user for readiness check
