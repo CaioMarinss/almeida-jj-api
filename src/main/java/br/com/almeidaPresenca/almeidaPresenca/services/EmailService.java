@@ -44,7 +44,7 @@ public class EmailService {
 
     String token = tokenService.generateToken(alunoVO);
 
-    String resetLink = linkApi + "/resetar?token=" + token + "&email=" + email;
+    String resetLink = linkFront + "/resetar?token=" + token + "&email=" + email;
 
     String subject = "Recuperação de Senha";
     String message = "Clique no link abaixo para redefinir sua senha:\n" + resetLink;
