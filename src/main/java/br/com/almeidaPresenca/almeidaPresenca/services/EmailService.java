@@ -18,9 +18,6 @@ public class EmailService {
 
   @Autowired private TokenService tokenService;
 
-  @Value("${app.url.api}")
-  private String linkApi;
-
   @Value("${app.url.front}")
   private String linkFront;
 
