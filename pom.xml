@@ -57,10 +57,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Dependência do Spring Boot Starter Data JPA -->
+		<!-- JPA starter removed — using plain JDBC to avoid Hibernate. Added spring-boot-starter-jdbc below. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
 
 		<dependency>
