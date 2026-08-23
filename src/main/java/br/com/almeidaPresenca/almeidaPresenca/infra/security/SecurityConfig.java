@@ -33,8 +33,8 @@ public class SecurityConfig {
                         HttpMethod.POST,
                         "/auth/login",
                         "/auth/register",
-                        "/auth/enviar-recuperacao",
-                        "/auth/enviar-email-verificacao")
+                        "/email/enviar-email-recuperacao",
+                        "/email/enviar-email-verificacao")
                     .permitAll()
                     //                        .requestMatchers(HttpMethod.GET,
                     // "/administrador/verificar").permitAll()

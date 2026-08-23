@@ -1,7 +1,6 @@
 package br.com.almeidaPresenca.almeidaPresenca.controllers;
 
 import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
-import br.com.almeidaPresenca.almeidaPresenca.dto.EmailDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.LoginRequestDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.RegisterRequestDTO;
 import br.com.almeidaPresenca.almeidaPresenca.dto.ResponseDTO;
@@ -86,40 +85,5 @@ public class AuthController {
     emailService.sendEmailVerification(novoAluno);
 
     return ResponseEntity.ok(Map.of(MsgSucesso.SUC001, MsgSucesso.SUC001.getDescricao()));
-  }
-
-  @PostMapping("/enviar-email-recuperacao")
-  public ResponseEntity<?> forgotPassword(@RequestBody EmailDTO body) {
-    AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
-    if (Objects.isNull(alunoVO)) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of(Errors.ERR001.getValue(), Errors.ERR001.getDescricao()));
-    }
-
-    try {
-      emailService.sendPasswordResetEmail(body.email());
-      return ResponseEntity.ok(Map.of(MsgSucesso.SUC002, MsgSucesso.SUC002.getDescricao()));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest()
-          .body(Map.of(Errors.ERR006.getValue(), Errors.ERR006.getDescricao()));
-    }
-  }
-
-  @PostMapping("/enviar-email-verificacao")
-  public ResponseEntity<?> verifyEmail(@RequestBody EmailDTO body) {
-
-    AlunoVO alunoVO = alunoDAO.obterPorEmail(body.email());
-    if (Objects.isNull(alunoVO)) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of(Errors.ERR001.getValue(), Errors.ERR001.getDescricao()));
-    }
-
-    try {
-      emailService.sendEmailVerification(alunoVO);
-      return ResponseEntity.ok(Map.of(MsgSucesso.SUC003, MsgSucesso.SUC003.getDescricao()));
-    } catch (Exception e) {
-      return ResponseEntity.badRequest()
-          .body(Map.of(Errors.ERR006.getValue(), Errors.ERR006.getDescricao()));
-    }
   }
 }

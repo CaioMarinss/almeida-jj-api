@@ -32,8 +32,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     if (path.equals("/auth/login")
         || path.equals("/auth/register")
-        || path.equals("/auth/enviar-email-recuperacao")
-        || path.equals("/auth/enviar-email-verificacao")) {
+        || path.equals("/email/enviar-email-recuperacao")
+        || path.equals("/email/enviar-email-verificacao")) {
       filterChain.doFilter(request, response);
       return;
     }

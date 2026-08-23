@@ -4,6 +4,7 @@ import br.com.almeidaPresenca.almeidaPresenca.dao.AlunoDAO;
 import br.com.almeidaPresenca.almeidaPresenca.infra.security.TokenService;
 import br.com.almeidaPresenca.almeidaPresenca.models.AlunoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,11 @@ public class EmailService {
 
   @Autowired private TokenService tokenService;
 
-  private final String link = "https://almeida-jj-api.onrender.com/auth";
-  private final String linkFront = "https://almeidatucuruvi.vercel.app";
+  @Value("${app.url.api}")
+  private String linkApi;
+
+  @Value("${app.url.front}")
+  private String linkFront;
 
   public void enviarEmail(String para, String assunto, String corpo) {
     SimpleMailMessage mensagem = new SimpleMailMessage();
@@ -40,7 +44,7 @@ public class EmailService {
 
     String token = tokenService.generateToken(alunoVO);
 
-    String resetLink = link + "/resetar?token=" + token + "&email=" + email;
+    String resetLink = linkApi + "/resetar?token=" + token + "&email=" + email;
 
     String subject = "Recuperação de Senha";
     String message = "Clique no link abaixo para redefinir sua senha:\n" + resetLink;
