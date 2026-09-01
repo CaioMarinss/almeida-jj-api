@@ -53,7 +53,13 @@ public class AuthController {
 
     if (passwordEncoder.matches(body.senha(), alunoVO.getSenha())) {
       String token = this.tokenService.generateToken(alunoVO);
-      return ResponseEntity.ok(new ResponseDTO(alunoVO.getNome(), token));
+      return ResponseEntity.ok(
+          new ResponseDTO(
+              token,
+              alunoVO.getIdAluno(),
+              alunoVO.getNome(),
+              alunoVO.getEmail(),
+              TipoSimOuNao.SIM.getValue().equals(alunoVO.getIcAdministrador())));
     }
 
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
